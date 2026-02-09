@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulaire de Contrat</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="form-header">
+            <h1 id="form-title">Complétez votre contrat</h1>
+            <p id="form-subtitle">Veuillez renseigner les informations manquantes</p>
+        </header>
+
+        <!-- Progress Bar -->
+        <div class="progress-container">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill"></div>
+            </div>
+            <div class="progress-text">
+                <span id="current-step">1</span> / <span id="total-steps">1</span>
+            </div>
+        </div>
+
+        <!-- Loading State -->
+        <div id="loading-state" class="loading-state">
+            <div class="spinner"></div>
+            <p>Chargement de votre contrat...</p>
+        </div>
+
+        <!-- Error State -->
+        <div id="error-state" class="error-state hidden">
+            <div class="error-icon">⚠️</div>
+            <p id="error-message">Une erreur est survenue</p>
+            <button onclick="location.reload()" class="btn btn-secondary">Réessayer</button>
+        </div>
+
+        <!-- Success State -->
+        <div id="success-state" class="success-state hidden">
+            <div class="success-icon">✓</div>
+            <h2>Succès !</h2>
+            <p>Votre contrat a été soumis avec succès.</p>
+        </div>
+
+        <!-- Form Container -->
+        <div id="form-container" class="form-container hidden">
+            <!-- Client Info (if available) -->
+            <div id="client-info" class="client-info hidden">
+                <h3>Informations du client</h3>
+                <div id="client-details"></div>
+            </div>
+
+            <!-- Multi-step Form -->
+            <form id="contract-form" novalidate>
+                <!-- Steps will be dynamically generated here -->
+                <div id="form-steps"></div>
+
+                <!-- Navigation Buttons -->
+                <div class="form-navigation">
+                    <button type="button" id="prev-btn" class="btn btn-secondary hidden">
+                        ← Précédent
+                    </button>
+                    <button type="button" id="next-btn" class="btn btn-primary">
+                        Suivant →
+                    </button>
+                    <button type="submit" id="submit-btn" class="btn btn-success hidden">
+                        Soumettre
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="config.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

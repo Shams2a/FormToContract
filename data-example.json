@@ -1,0 +1,409 @@
+{
+  "contractId": "CERFA-2024-001",
+  "clientName": "Jean Dupont",
+  "clientEmail": "jean.dupont@example.com",
+  "sections": [
+    {
+      "id": "employeur",
+      "title": "L'Employeur",
+      "description": "Informations sur l'entreprise qui accueille l'apprenti",
+      "fields": [
+        {
+          "name": "employeur_type",
+          "label": "Type d'employeur",
+          "type": "select",
+          "required": true,
+          "options": [
+            { "value": "prive", "label": "Privé" },
+            { "value": "public", "label": "Public" }
+          ]
+        },
+        {
+          "name": "employeur_raison_sociale",
+          "label": "Raison sociale / Nom de l'entreprise",
+          "type": "text",
+          "required": true,
+          "placeholder": "Ex: SARL Dupont & Fils"
+        },
+        {
+          "name": "employeur_siret",
+          "label": "Numéro SIRET (14 chiffres)",
+          "type": "text",
+          "required": true,
+          "placeholder": "12345678901234",
+          "pattern": "\\d{14}"
+        },
+        {
+          "name": "employeur_adresse",
+          "label": "Adresse complète",
+          "type": "text",
+          "required": true,
+          "placeholder": "12 rue de la Paix"
+        },
+        {
+          "name": "employeur_code_postal",
+          "label": "Code postal",
+          "type": "text",
+          "required": true,
+          "placeholder": "75000"
+        },
+        {
+          "name": "employeur_ville",
+          "label": "Ville",
+          "type": "text",
+          "required": true,
+          "placeholder": "Paris"
+        },
+        {
+          "name": "employeur_effectif",
+          "label": "Effectif total de l'entreprise",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "placeholder": "10"
+        },
+        {
+          "name": "employeur_convention_collective",
+          "label": "Intitulé de la convention collective",
+          "type": "text",
+          "required": true,
+          "placeholder": "Ex: Convention collective nationale du commerce de détail"
+        },
+        {
+          "name": "employeur_idcc",
+          "label": "Code IDCC (4 chiffres)",
+          "type": "text",
+          "required": true,
+          "placeholder": "1234",
+          "pattern": "\\d{4}"
+        },
+        {
+          "name": "employeur_naf",
+          "label": "Code NAF/APE",
+          "type": "text",
+          "required": true,
+          "placeholder": "Ex: 62.01Z"
+        }
+      ]
+    },
+    {
+      "id": "apprenti",
+      "title": "L'Apprenti(e)",
+      "description": "Informations personnelles de l'apprenti",
+      "fields": [
+        {
+          "name": "apprenti_nom",
+          "label": "Nom de famille",
+          "type": "text",
+          "required": true,
+          "placeholder": "Dupont"
+        },
+        {
+          "name": "apprenti_prenom",
+          "label": "Prénom",
+          "type": "text",
+          "required": true,
+          "placeholder": "Jean"
+        },
+        {
+          "name": "apprenti_nir",
+          "label": "NIR (Numéro de sécurité sociale - 15 chiffres)",
+          "type": "text",
+          "required": true,
+          "placeholder": "1 95 04 75 123 456 78",
+          "pattern": "[0-9\\s]{15,21}"
+        },
+        {
+          "name": "apprenti_date_naissance",
+          "label": "Date de naissance",
+          "type": "date",
+          "required": true
+        },
+        {
+          "name": "apprenti_lieu_naissance",
+          "label": "Lieu de naissance (Ville)",
+          "type": "text",
+          "required": true,
+          "placeholder": "Paris"
+        },
+        {
+          "name": "apprenti_adresse",
+          "label": "Adresse",
+          "type": "text",
+          "required": true,
+          "placeholder": "5 avenue des Champs"
+        },
+        {
+          "name": "apprenti_code_postal",
+          "label": "Code postal",
+          "type": "text",
+          "required": true,
+          "placeholder": "75008"
+        },
+        {
+          "name": "apprenti_ville",
+          "label": "Ville",
+          "type": "text",
+          "required": true,
+          "placeholder": "Paris"
+        },
+        {
+          "name": "apprenti_email",
+          "label": "Email",
+          "type": "email",
+          "required": true,
+          "placeholder": "jean.dupont@email.com"
+        },
+        {
+          "name": "apprenti_telephone",
+          "label": "Téléphone",
+          "type": "tel",
+          "required": true,
+          "placeholder": "06 12 34 56 78"
+        },
+        {
+          "name": "apprenti_dernier_diplome",
+          "label": "Dernier diplôme préparé",
+          "type": "text",
+          "required": true,
+          "placeholder": "Ex: Baccalauréat général"
+        },
+        {
+          "name": "apprenti_derniere_classe",
+          "label": "Dernière classe fréquentée",
+          "type": "text",
+          "required": true,
+          "placeholder": "Ex: Terminale"
+        },
+        {
+          "name": "apprenti_situation",
+          "label": "Situation avant le contrat",
+          "type": "select",
+          "required": true,
+          "options": [
+            { "value": "scolaire", "label": "En scolarité" },
+            { "value": "recherche_emploi", "label": "En recherche d'emploi" },
+            { "value": "salarie", "label": "Salarié" },
+            { "value": "autre", "label": "Autre" }
+          ]
+        },
+        {
+          "name": "apprenti_mineur",
+          "label": "L'apprenti est-il mineur ?",
+          "type": "select",
+          "required": true,
+          "options": [
+            { "value": "non", "label": "Non" },
+            { "value": "oui", "label": "Oui" }
+          ]
+        },
+        {
+          "name": "representant_nom",
+          "label": "Représentant légal - Nom et Prénom",
+          "type": "text",
+          "required": false,
+          "placeholder": "À remplir si l'apprenti est mineur",
+          "showIf": {
+            "field": "apprenti_mineur",
+            "value": "oui"
+          }
+        },
+        {
+          "name": "representant_telephone",
+          "label": "Représentant légal - Téléphone",
+          "type": "tel",
+          "required": false,
+          "placeholder": "06 12 34 56 78",
+          "showIf": {
+            "field": "apprenti_mineur",
+            "value": "oui"
+          }
+        }
+      ]
+    },
+    {
+      "id": "maitre_apprentissage",
+      "title": "Le Maître d'Apprentissage",
+      "description": "Personne qui encadre l'apprenti au quotidien",
+      "fields": [
+        {
+          "name": "maitre_nom",
+          "label": "Nom",
+          "type": "text",
+          "required": true,
+          "placeholder": "Martin"
+        },
+        {
+          "name": "maitre_prenom",
+          "label": "Prénom",
+          "type": "text",
+          "required": true,
+          "placeholder": "Sophie"
+        },
+        {
+          "name": "maitre_date_naissance",
+          "label": "Date de naissance",
+          "type": "date",
+          "required": true
+        },
+        {
+          "name": "maitre_nir",
+          "label": "NIR (Numéro de sécurité sociale)",
+          "type": "text",
+          "required": true,
+          "placeholder": "1 75 04 75 123 456 78",
+          "pattern": "[0-9\\s]{15,21}"
+        },
+        {
+          "name": "maitre_diplome",
+          "label": "Diplôme le plus élevé obtenu",
+          "type": "text",
+          "required": true,
+          "placeholder": "Ex: Master en Informatique"
+        },
+        {
+          "name": "maitre_experience",
+          "label": "Années d'expérience professionnelle en rapport avec la qualification",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "placeholder": "5"
+        }
+      ]
+    },
+    {
+      "id": "contrat",
+      "title": "Le Contrat",
+      "description": "Détails logistiques et légaux",
+      "fields": [
+        {
+          "name": "contrat_date_conclusion",
+          "label": "Date de conclusion du contrat",
+          "type": "date",
+          "required": true
+        },
+        {
+          "name": "contrat_date_debut",
+          "label": "Date de début d'exécution",
+          "type": "date",
+          "required": true
+        },
+        {
+          "name": "contrat_date_fin",
+          "label": "Date de fin",
+          "type": "date",
+          "required": true
+        },
+        {
+          "name": "contrat_type",
+          "label": "Type de contrat",
+          "type": "select",
+          "required": true,
+          "options": [
+            { "value": "initial", "label": "Initial" },
+            { "value": "renouvellement", "label": "Renouvellement" },
+            { "value": "amenagement", "label": "Aménagement de durée" }
+          ]
+        },
+        {
+          "name": "contrat_duree_hebdo",
+          "label": "Durée hebdomadaire de travail (heures)",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "max": 48,
+          "placeholder": "35"
+        },
+        {
+          "name": "contrat_remuneration_annee1",
+          "label": "Rémunération brute mensuelle - Année 1 (€)",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "placeholder": "850"
+        },
+        {
+          "name": "contrat_remuneration_annee2",
+          "label": "Rémunération brute mensuelle - Année 2 (€)",
+          "type": "number",
+          "required": false,
+          "min": 0,
+          "placeholder": "1000"
+        },
+        {
+          "name": "contrat_remuneration_annee3",
+          "label": "Rémunération brute mensuelle - Année 3 (€)",
+          "type": "number",
+          "required": false,
+          "min": 0,
+          "placeholder": "1200"
+        }
+      ]
+    },
+    {
+      "id": "formation",
+      "title": "La Formation",
+      "description": "Informations relatives au diplôme visé",
+      "fields": [
+        {
+          "name": "cfa_nom",
+          "label": "Nom du CFA (Centre de Formation d'Apprentis)",
+          "type": "text",
+          "required": true,
+          "placeholder": "Ex: CFA de la Chambre de Commerce"
+        },
+        {
+          "name": "cfa_siret",
+          "label": "SIRET du CFA (14 chiffres)",
+          "type": "text",
+          "required": true,
+          "placeholder": "98765432109876",
+          "pattern": "\\d{14}"
+        },
+        {
+          "name": "cfa_adresse",
+          "label": "Adresse du CFA",
+          "type": "text",
+          "required": true,
+          "placeholder": "10 rue de la Formation"
+        },
+        {
+          "name": "cfa_code_postal",
+          "label": "Code postal",
+          "type": "text",
+          "required": true,
+          "placeholder": "75001"
+        },
+        {
+          "name": "cfa_ville",
+          "label": "Ville",
+          "type": "text",
+          "required": true,
+          "placeholder": "Paris"
+        },
+        {
+          "name": "diplome_intitule",
+          "label": "Intitulé exact du diplôme préparé",
+          "type": "text",
+          "required": true,
+          "placeholder": "Ex: BTS Services Informatiques aux Organisations"
+        },
+        {
+          "name": "diplome_code",
+          "label": "Code diplôme (fourni par le CFA)",
+          "type": "text",
+          "required": true,
+          "placeholder": "Ex: 32031310"
+        },
+        {
+          "name": "formation_heures_totales",
+          "label": "Volume total d'heures de formation sur la durée du contrat",
+          "type": "number",
+          "required": true,
+          "min": 1,
+          "placeholder": "1350"
+        }
+      ]
+    }
+  ]
+}

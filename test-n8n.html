@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Webhook n8n</title>
+    <style>
+        body {
+            font-family: monospace;
+            padding: 20px;
+            background: #1e1e1e;
+            color: #d4d4d4;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background: #0078d4;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 10px 0;
+        }
+        button:hover {
+            background: #005a9e;
+        }
+        pre {
+            background: #252526;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        .success {
+            color: #4ec9b0;
+        }
+        .error {
+            color: #f48771;
+        }
+        .warning {
+            color: #dcdcaa;
+        }
+        input {
+            padding: 8px;
+            width: 300px;
+            margin: 10px 0;
+            background: #252526;
+            border: 1px solid #3e3e42;
+            color: #d4d4d4;
+            border-radius: 4px;
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 Test Webhook n8n</h1>
+        <p>Cet outil teste la connexion avec ton webhook n8n et affiche la réponse.</p>
+
+        <label>URL du webhook:</label>
+        <input type="text" id="webhookUrl" value="https://n8n-ou5ygldozq-od.a.run.app/webhook-test/form-data">
+
+        <label>Token:</label>
+        <input type="text" id="token" value="test123">
+
+        <br>
+        <button onclick="testWebhook()">🚀 Tester le webhook</button>
+        <button onclick="clearLogs()">🗑️ Effacer les logs</button>
+
+        <h2>📋 Logs</h2>
+        <pre id="logs"></pre>
+
+        <h2>📦 Réponse JSON</h2>
+        <pre id="response"></pre>
+
+        <h2>✅ Validation</h2>
+        <pre id="validation"></pre>
+    </div>
+
+    <script>
+        const logsEl = document.getElementById('logs');
+        const responseEl = document.getElementById('response');
+        const validationEl = document.getElementById('validation');
+
+        function log(message, type = 'info') {
+            const timestamp = new Date().toLocaleTimeString();
+            const color = type === 'error' ? 'error' : type === 'success' ? 'success' : type === 'warning' ? 'warning' : '';
+            logsEl.innerHTML += `<span class="${color}">[${timestamp}] ${message}</span>\n`;
+        }
+
+        function clearLogs() {
+            logsEl.innerHTML = '';
+            responseEl.innerHTML = '';
+            validationEl.innerHTML = '';
+        }
+
+        async function testWebhook() {
+            clearLogs();
+
+            const webhookUrl = document.getElementById('webhookUrl').value;
+            const token = document.getElementById('token').value;
+            const fullUrl = `${webhookUrl}?token=${token}`;
+
+            log(`🔗 URL complète: ${fullUrl}`);
+            log('📡 Envoi de la requête GET...');
+
+            try {
+                const startTime = Date.now();
+                const response = await fetch(fullUrl, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                const duration = Date.now() - startTime;
+                log(`⏱️ Temps de réponse: ${duration}ms`);
+                log(`📊 Status HTTP: ${response.status} ${response.statusText}`, response.ok ? 'success' : 'error');
+                log(`🔑 Content-Type: ${response.headers.get('content-type')}`);
+
+                if (!response.ok) {
+                    log(`❌ Erreur HTTP: ${response.status}`, 'error');
+                    const text = await response.text();
+                    responseEl.textContent = text;
+                    return;
+                }
+
+                // Lire la réponse comme texte d'abord
+                const rawText = await response.text();
+                log(`📄 Taille de la réponse: ${rawText.length} caractères`);
+
+                // Afficher la réponse brute
+                responseEl.textContent = rawText;
+
+                // Tenter de parser le JSON
+                try {
+                    const data = JSON.parse(rawText);
+                    log('✅ JSON parsé avec succès', 'success');
+
+                    // Afficher le JSON formaté
+                    responseEl.textContent = JSON.stringify(data, null, 2);
+
+                    // Valider la structure
+                    validateStructure(data);
+
+                } catch (parseError) {
+                    log(`❌ Erreur de parsing JSON: ${parseError.message}`, 'error');
+                    validationEl.innerHTML = `<span class="error">Le webhook ne retourne pas un JSON valide.</span>`;
+                }
+
+            } catch (error) {
+                log(`❌ Erreur de connexion: ${error.message}`, 'error');
+
+                if (error.message.includes('Failed to fetch')) {
+                    validationEl.innerHTML = `
+<span class="error">❌ Impossible de se connecter au webhook.</span>
+
+Causes possibles:
+1. Problème CORS - Le serveur n8n doit autoriser les requêtes depuis ton domaine
+2. URL incorrecte
+3. Webhook n8n désactivé
+
+Solution CORS:
+Dans n8n, ajoute un node "Set Headers" avant le "Respond to Webhook":
+{
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type"
+}`;
+                }
+            }
+        }
+
+        function validateStructure(data) {
+            let validation = '';
+            let isValid = true;
+
+            validation += '<span class="success">✅ Structure du JSON:</span>\n\n';
+
+            // Vérifier contractId
+            if (data.contractId) {
+                validation += `✅ contractId: "${data.contractId}"\n`;
+            } else {
+                validation += '<span class="warning">⚠️ contractId manquant (optionnel)</span>\n';
+            }
+
+            // Vérifier sections
+            if (!data.sections) {
+                validation += '<span class="error">❌ ERREUR: "sections" manquant</span>\n';
+                isValid = false;
+            } else if (!Array.isArray(data.sections)) {
+                validation += '<span class="error">❌ ERREUR: "sections" doit être un tableau</span>\n';
+                isValid = false;
+            } else if (data.sections.length === 0) {
+                validation += '<span class="error">❌ ERREUR: "sections" est vide</span>\n';
+                isValid = false;
+            } else {
+                validation += `✅ sections: ${data.sections.length} section(s) trouvée(s)\n\n`;
+
+                // Valider chaque section
+                data.sections.forEach((section, index) => {
+                    validation += `📂 Section ${index + 1}:\n`;
+
+                    if (!section.id) {
+                        validation += '  <span class="error">❌ "id" manquant</span>\n';
+                        isValid = false;
+                    } else {
+                        validation += `  ✅ id: "${section.id}"\n`;
+                    }
+
+                    if (!section.title) {
+                        validation += '  <span class="error">❌ "title" manquant</span>\n';
+                        isValid = false;
+                    } else {
+                        validation += `  ✅ title: "${section.title}"\n`;
+                    }
+
+                    if (!section.fields) {
+                        validation += '  <span class="error">❌ "fields" manquant</span>\n';
+                        isValid = false;
+                    } else if (!Array.isArray(section.fields)) {
+                        validation += '  <span class="error">❌ "fields" doit être un tableau</span>\n';
+                        isValid = false;
+                    } else if (section.fields.length === 0) {
+                        validation += '  <span class="warning">⚠️ "fields" est vide</span>\n';
+                    } else {
+                        validation += `  ✅ fields: ${section.fields.length} champ(s)\n`;
+
+                        // Valider les champs
+                        section.fields.forEach((field, fieldIndex) => {
+                            if (!field.name) {
+                                validation += `    <span class="error">❌ Champ ${fieldIndex + 1}: "name" manquant</span>\n`;
+                                isValid = false;
+                            }
+                            if (!field.label) {
+                                validation += `    <span class="error">❌ Champ ${fieldIndex + 1}: "label" manquant</span>\n`;
+                                isValid = false;
+                            }
+                            if (!field.type) {
+                                validation += `    <span class="error">❌ Champ ${fieldIndex + 1}: "type" manquant</span>\n`;
+                                isValid = false;
+                            }
+                        });
+                    }
+
+                    validation += '\n';
+                });
+            }
+
+            if (isValid) {
+                validation += '\n<span class="success">🎉 Structure valide ! Le formulaire devrait fonctionner.</span>';
+            } else {
+                validation += '\n<span class="error">❌ Structure invalide. Corrige les erreurs ci-dessus.</span>';
+            }
+
+            validationEl.innerHTML = validation;
+        }
+
+        // Test automatique au chargement (optionnel)
+        // testWebhook();
+    </script>
+</body>
+</html>
